@@ -12,8 +12,8 @@ pub const PADDLE_HEIGHT: f32 = 16.0;
 pub const PADDLE_WIDTH: f32 = 4.0;
 
 pub enum Side {
-    LEFT,
-    RIGHT
+    Left,
+    Right
 }
 
 pub struct Paddle {
@@ -42,8 +42,6 @@ impl SimpleState for Pong {
     fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
         let world = data.world;
         let sprite_sheet_handle = load_sprite_sheet(world);
-
-        world.register::<Paddle>();
 
         initilise_paddles(world, sprite_sheet_handle);
         initialise_camera(world);
@@ -77,14 +75,14 @@ fn initilise_paddles(world: &mut World, sprite_sheet: Handle<SpriteSheet>) {
     world
         .create_entity()
         .with(sprite_render.clone())
-        .with(Paddle::new(Side::LEFT))
+        .with(Paddle::new(Side::Left))
         .with(left_transform)
         .build();
 
     world
         .create_entity()
         .with(sprite_render.clone())
-        .with(Paddle::new(Side::RIGHT))
+        .with(Paddle::new(Side::Right))
         .with(right_transform)
         .build();
 }

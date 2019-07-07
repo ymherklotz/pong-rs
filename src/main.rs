@@ -13,6 +13,7 @@ use amethyst::{
 };
 
 mod pong;
+mod systems;
 
 use crate::pong::Pong;
 
@@ -102,14 +103,22 @@ impl GraphCreator<DefaultBackend> for ExampleGraph {
 }
 
 fn main() -> amethyst::Result<()> {
+    use amethyst::input::{InputBundle, StringBindings};
+
     amethyst::start_logger(Default::default());
 
     let app_root = application_root_dir()?;
     let display_config_path = app_root.join("resources").join("display_config.ron");
+    let binding_path = app_root.join("resources").join("bindings_config.ron");
+
+    let input_bundle = InputBundle::<StringBindings>::new()
+        .with_bindings_from_file(binding_path)?;
 
     let game_data = GameDataBuilder::default()
         .with_bundle(WindowBundle::from_config_path(display_config_path))?
         .with_bundle(TransformBundle::new())?
+        .with_bundle(input_bundle)?
+        .with(systems::PaddleSystem, "paddle_system", &["input_system"])
         .with(
             Processor::<SpriteSheet>::new(),
             "sprite_sheet_processor",
