@@ -1,3 +1,6 @@
+mod pong;
+mod systems;
+
 use amethyst::{
     assets::Processor,
     ecs::{ReadExpect, Resources, SystemData},
@@ -11,9 +14,6 @@ use amethyst::{
     window::{ScreenDimensions, Window, WindowBundle},
     core::transform::TransformBundle
 };
-
-mod pong;
-mod systems;
 
 use crate::pong::Pong;
 
@@ -119,6 +119,8 @@ fn main() -> amethyst::Result<()> {
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
         .with(systems::PaddleSystem, "paddle_system", &["input_system"])
+        .with(systems::MoveBallsSystem, "move_balls_system", &[])
+        .with(systems::BounceSystem, "bounce_system", &["paddle_system", "move_balls_system"])
         .with(
             Processor::<SpriteSheet>::new(),
             "sprite_sheet_processor",
